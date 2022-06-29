@@ -8,8 +8,8 @@ const orderControllers_1 = require("../controllers/orderControllers");
 const stripeController_1 = require("../controllers/stripeController");
 const auth_1 = require("../middleware/auth");
 const router = express_1.default.Router();
-router.route('/').get(auth_1.auth, orderControllers_1.getOrderList).post(auth_1.auth, orderControllers_1.createOrder);
-router.route('/stripe').post(auth_1.auth, stripeController_1.stripePay);
+router.route('/').get(auth_1.auth, auth_1.admin, orderControllers_1.getOrderList).post(auth_1.auth, orderControllers_1.createOrder);
+router.route('/stripe').post(stripeController_1.stripePay);
 router.route('/orders-user').get(auth_1.auth, orderControllers_1.getUserOrder);
 router
     .route('/:id')

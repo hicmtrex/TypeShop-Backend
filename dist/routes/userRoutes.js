@@ -8,6 +8,7 @@ const userControllers_1 = require("../controllers/userControllers");
 const auth_1 = require("../middleware/auth");
 const router = express_1.default.Router();
 router.route('/').get(userControllers_1.getUsersList);
+router.route('/promote/:id').post(auth_1.auth, auth_1.admin, userControllers_1.promoteAdmin);
 router
     .route('/:id')
     .get(userControllers_1.getUserBydId)

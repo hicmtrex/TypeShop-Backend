@@ -42,7 +42,7 @@ app.use('/uploads', express.static(path.join(process.cwd(), '/uploads')));
 app.use(notFound);
 app.use(errorHandler);
 
-const PORT: number | string = process.env.PORT || 5000;
+const PORT: number | string = process.env.PORT || 1337;
 
 const server: Server = app.listen(PORT, () =>
   console.log(

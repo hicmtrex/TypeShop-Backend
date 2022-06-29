@@ -16,7 +16,8 @@ exports.stripePay = void 0;
 const stripe_1 = __importDefault(require("stripe"));
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const uid_generator_1 = __importDefault(require("uid-generator"));
-const stripe = new stripe_1.default('sk_test_51KesRYH5cYomygyIffw08jlDMHy9ho25A2libjahdd0vIHGIrJJerzdJqztgKEPob11mgu4F4bUFVY4AaMmY0qBE006wASQ6SX', {
+const key = process.env.STRIPE_SECRET_KEY || '';
+const stripe = new stripe_1.default(key, {
     apiVersion: '2020-08-27',
 });
 const uidgen = new uid_generator_1.default();
@@ -25,7 +26,7 @@ exports.stripePay = (0, express_async_handler_1.default)((req, res) => __awaiter
     const idempotencyKey = yield uidgen.generate();
     return stripe.customers
         .create({
-        email: token.email,
+        email: token === null || token === void 0 ? void 0 : token.email,
         source: token,
     })
         .then((customer) => {
@@ -33,7 +34,7 @@ exports.stripePay = (0, express_async_handler_1.default)((req, res) => __awaiter
             amount: amount * 100,
             currency: 'usd',
             customer: customer.id,
-            receipt_email: token.email,
+            receipt_email: token === null || token === void 0 ? void 0 : token.email,
         }, { idempotencyKey });
     })
         .then((result) => {

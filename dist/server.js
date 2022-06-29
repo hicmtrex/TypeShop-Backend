@@ -14,7 +14,9 @@ const morgan_1 = __importDefault(require("morgan"));
 const errorMiddleware_1 = require("./middleware/errorMiddleware");
 const cors_1 = __importDefault(require("cors"));
 const path_1 = __importDefault(require("path"));
-dotenv_1.default.config();
+dotenv_1.default.config({
+    path: path_1.default.resolve(__dirname, '/.env'),
+});
 (0, db_1.default)();
 const app = (0, express_1.default)();
 if (process.env.NODE_ENV === 'development') {
@@ -26,10 +28,8 @@ app.use('/api/products', productRoutes_1.default);
 app.use('/api/users', userRoutes_1.default);
 app.use('/api/orders', orderRoutes_1.default);
 app.use('/api/uploads', uploadRoutes_1.default);
-__dirname = path_1.default.resolve();
-app.use('/uploads', express_1.default.static(path_1.default.join(__dirname, '/uploads')));
-app.use('/resumes', express_1.default.static(path_1.default.join(__dirname, '/uploads')));
+app.use('/uploads', express_1.default.static(path_1.default.join(process.cwd(), '/uploads')));
 app.use(errorMiddleware_1.notFound);
 app.use(errorMiddleware_1.errorHandler);
 const PORT = process.env.PORT || 5000;
-const server = app.listen(PORT, () => console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`));
+const server = app.listen(PORT, () => console.log(`🟢 Server running in ${process.env.NODE_ENV} mode on port ${PORT}`));
