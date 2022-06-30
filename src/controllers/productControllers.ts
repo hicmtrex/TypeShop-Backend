@@ -2,6 +2,9 @@ import { Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import Product from '../models/productModel';
 
+// @desc    Fetch 12 products
+// @route   GET /api/products
+// @access  Public
 export const getProductList = asyncHandler(
   async (req: Request, res: Response) => {
     const products = await Product.find({}).limit(12);
@@ -14,6 +17,10 @@ export const getProductList = asyncHandler(
     }
   }
 );
+
+// @desc   Fetch all products with pages for pagination category brand for filter and searchQuery for search
+// @route   GET /api/products/search
+// @access  Public
 
 export const getProductSearch = asyncHandler(
   async (req: Request, res: Response) => {
@@ -64,6 +71,10 @@ export const getProductSearch = asyncHandler(
   }
 );
 
+// @desc    Fetch single product
+// @route   GET /api/products/:id
+// @access  Public
+
 export const getProductById = asyncHandler(
   async (req: Request, res: Response) => {
     const product = await Product.findById(req.params.id);
@@ -76,6 +87,10 @@ export const getProductById = asyncHandler(
     }
   }
 );
+
+// @desc    Create a product
+// @route   POST /api/products
+// @access  Private/Admin
 
 export const createProduct = asyncHandler(
   async (req: Request, res: Response) => {
@@ -100,6 +115,10 @@ export const createProduct = asyncHandler(
   }
 );
 
+// @desc    Update a product
+// @route   PUT /api/products/:id
+// @access  Private/Admin
+
 export const updateProduct = asyncHandler(
   async (req: Request, res: Response) => {
     const product = await Product.findByIdAndUpdate(req.params.id, req.body);
@@ -112,6 +131,10 @@ export const updateProduct = asyncHandler(
     }
   }
 );
+
+// @desc    Delete a product
+// @route   DELETE /api/products/:id
+// @access  Private/Admin
 
 export const deleteProduct = asyncHandler(
   async (req: Request, res: Response) => {
@@ -127,6 +150,9 @@ export const deleteProduct = asyncHandler(
   }
 );
 
+// @desc    Create review
+// @route   POST /api/products/:id/reviews
+// @access  Private
 export const createReview = asyncHandler(async (req: any, res: Response) => {
   const { comment, rating } = req.body;
 

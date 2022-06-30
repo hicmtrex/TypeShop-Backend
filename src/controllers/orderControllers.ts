@@ -1,7 +1,10 @@
 import { Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
-import { AnyKeys } from 'mongoose';
 import Order from '../models/orderModel';
+
+// @desc    get all orders
+// @route   Get /api/orders
+// @access  Admin
 
 export const getOrderList = asyncHandler(
   async (req: Request, res: Response) => {
@@ -16,6 +19,10 @@ export const getOrderList = asyncHandler(
   }
 );
 
+// @desc    get user orders
+// @route   Get /api/orders/orders-user
+// @access  Private
+
 export const getUserOrder = asyncHandler(async (req: any, res: Response) => {
   const orders = await Order.find({ user: req.user._id });
 
@@ -26,6 +33,10 @@ export const getUserOrder = asyncHandler(async (req: any, res: Response) => {
     throw new Error('orders not found!');
   }
 });
+
+// @desc    Pay order
+// @route   Put /api/orders/:id
+// @access  Private
 
 export const payOrder = asyncHandler(async (req: Request, res: Response) => {
   const order = await Order.findById(req.params.id);
@@ -40,6 +51,10 @@ export const payOrder = asyncHandler(async (req: Request, res: Response) => {
   }
 });
 
+// @desc    Get order by ID
+// @route   GET /api/orders/:id
+// @access  Private
+
 export const getOrderById = asyncHandler(
   async (req: Request, res: Response) => {
     const order = await Order.findById(req.params.id);
@@ -53,6 +68,10 @@ export const getOrderById = asyncHandler(
   }
 );
 
+// @desc    delete user order
+// @route   Delete /api/orders/:id
+// @access  Private
+
 export const deleteOrder = asyncHandler(async (req: Request, res: Response) => {
   const order = await Order.findById(req.params.id);
 
@@ -64,6 +83,10 @@ export const deleteOrder = asyncHandler(async (req: Request, res: Response) => {
     throw new Error('orders not found!');
   }
 });
+
+// @desc    Create new order
+// @route   POST /api/orders
+// @access  Private
 
 export const createOrder = asyncHandler(async (req: any, res: Response) => {
   const { cartItems, shippingAddress, totalPrice } = req.body;

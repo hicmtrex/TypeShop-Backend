@@ -1,4 +1,4 @@
-import express, { Request } from 'express';
+import express from 'express';
 import multer from 'multer';
 import path from 'path';
 
@@ -34,6 +34,10 @@ const uploadImg = multer({
     checkFileType(file, cb);
   },
 });
+
+// @desc    upload image
+// @route   Post /api/image
+// @access  Private
 
 router.post('/image', uploadImg.single('image'), (req: any, res) => {
   res.send(`/${req.file?.path}`);

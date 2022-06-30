@@ -10,6 +10,10 @@ const stripe = new Stripe(key, {
 
 const uidgen = new UIDGenerator();
 
+// @desc    payment with stripe
+// @route   Post /api/orders/stripe
+// @access  Private
+
 export const stripePay = asyncHandler(async (req, res) => {
   const { token, amount } = req.body;
   const idempotencyKey = await uidgen.generate();

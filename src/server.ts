@@ -15,12 +15,6 @@ dotenv.config({
   path: path.resolve(__dirname, '/.env'),
 });
 
-interface ENV {
-  NODE_ENV: string | undefined;
-  PORT: number | undefined;
-  MONGO_URI: string | undefined;
-}
-
 connectDb();
 
 const app: Application = express();

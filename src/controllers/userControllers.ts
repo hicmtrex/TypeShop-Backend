@@ -4,6 +4,10 @@ import User from '../models/userModel';
 import bcrypt from 'bcryptjs';
 import generateToken from '../utils/generateToken';
 
+// @desc    Register a new user
+// @route   POST /api/users/register
+// @access  Public
+
 export const register = asyncHandler(async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
 
@@ -17,6 +21,10 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
     throw new Error('user not found!');
   }
 });
+
+// @desc    Auth user & get token
+// @route   POST /api/users/login
+// @access  Public
 
 export const login = asyncHandler(async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -41,6 +49,10 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   }
 });
 
+// @desc    Get all users
+// @route   Get /api/users
+// @access  Admin
+
 export const getUsersList = asyncHandler(
   async (req: Request, res: Response) => {
     const users = await User.find({});
@@ -54,6 +66,10 @@ export const getUsersList = asyncHandler(
   }
 );
 
+// @desc    Get single user
+// @route   Get /api/users/:id
+// @access  Private
+
 export const getUserBydId = asyncHandler(
   async (req: Request, res: Response) => {
     const user = await User.findById(req.params.id);
@@ -66,6 +82,10 @@ export const getUserBydId = asyncHandler(
     }
   }
 );
+
+// @desc    update user profile
+// @route   Put /api/users/:id
+// @access  Private
 
 export const updatrUserProfile = asyncHandler(
   async (req: Request, res: Response) => {
@@ -85,6 +105,10 @@ export const updatrUserProfile = asyncHandler(
   }
 );
 
+// @desc    promote user to admin
+// @route   Post /api/users/promote/:id
+// @access  Admin
+
 export const promoteAdmin = asyncHandler(
   async (req: Request, res: Response) => {
     const user = await User.findById(req.params.id);
@@ -99,6 +123,10 @@ export const promoteAdmin = asyncHandler(
     }
   }
 );
+
+// @desc    delete user
+// @route   Delete /api/users/:id
+// @access  Admin
 
 export const deleteUser = asyncHandler(async (req: Request, res: Response) => {
   const user = await User.findById(req.params.id);
