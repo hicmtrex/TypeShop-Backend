@@ -1,11 +1,12 @@
 import jwt from 'jsonwebtoken';
 import asyncHandler from 'express-async-handler';
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 import User from '../models/userModel';
 import {
   DataStoredInToken,
   RequestWithUser,
 } from '../utils/interfaces/user.interface';
+import sanitizedConfig from '../config';
 
 export const auth = asyncHandler(
   async (req: any, res: Response, next: NextFunction) => {
@@ -17,7 +18,10 @@ export const auth = asyncHandler(
       try {
         token = authorization.split(' ')[1];
 
-        const decoded = jwt.verify(token, '3033') as DataStoredInToken;
+        const decoded = jwt.verify(
+          token,
+          sanitizedConfig.JWT_SECRET
+        ) as DataStoredInToken;
         req.user = await User.findById(decoded.id).select('-password');
 
         next();
@@ -35,7 +39,7 @@ export const auth = asyncHandler(
 );
 
 export const admin = asyncHandler(
-  async (req: any, res: Response, next: NextFunction) => {
+  async (req: RequestWithUser | any, res: Response, next: NextFunction) => {
     if (req.user && req.user.isAdmin) {
       next();
     } else {

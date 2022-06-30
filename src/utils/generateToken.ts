@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken';
+import sanitizedConfig from '../config';
 
 const generateToken = (id: string) => {
-  return jwt.sign({ id }, '3033', {
+  return jwt.sign({ id }, sanitizedConfig.JWT_SECRET, {
     expiresIn: '30d',
   });
 };

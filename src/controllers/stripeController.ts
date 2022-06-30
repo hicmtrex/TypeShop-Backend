@@ -1,8 +1,9 @@
 import Stripe from 'stripe';
 import asyncHandler from 'express-async-handler';
 import UIDGenerator from 'uid-generator';
+import sanitizedConfig from '../config';
 
-const key: string | undefined = process.env.STRIPE_SECRET_KEY || '';
+const key: string | undefined = sanitizedConfig.STRIPE_SECRET_KEY || '';
 
 const stripe = new Stripe(key, {
   apiVersion: '2020-08-27',

@@ -10,6 +10,7 @@ import morgan from 'morgan';
 import { errorHandler, notFound } from './middleware/errorMiddleware';
 import cors from 'cors';
 import path from 'path';
+import sanitizedConfig from './config';
 
 dotenv.config({
   path: path.resolve(__dirname, '/.env'),
@@ -19,7 +20,7 @@ connectDb();
 
 const app: Application = express();
 
-if (process.env.NODE_ENV === 'development') {
+if (sanitizedConfig.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
@@ -36,10 +37,10 @@ app.use('/uploads', express.static(path.join(process.cwd(), '/uploads')));
 app.use(notFound);
 app.use(errorHandler);
 
-const PORT: number | string = process.env.PORT || 1337;
+const PORT: number | string = sanitizedConfig.PORT || 1337;
 
 const server: Server = app.listen(PORT, () =>
   console.log(
-    `🟢 Server running in ${process.env.NODE_ENV} mode on port ${PORT}`
+    `🟢 Server running in ${sanitizedConfig.NODE_ENV} mode on port ${PORT}`
   )
 );
