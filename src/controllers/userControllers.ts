@@ -10,10 +10,22 @@ import generateToken from '../utils/generateToken';
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
+  if (
+    !email ||
+    !email.includes('@') ||
+    !name ||
+    name.trim() === '' ||
+    !password ||
+    password.trim() === ''
+  ) {
+    res.status(422).json({ message: 'Invalid input.' });
+    return;
+  }
+  const exist = await User.findOne({ email });
 
-  if (email.trim() === '' || !email.trim().include('@')) {
-    res.status(500);
-    throw new Error('Please enter a valid email');
+  if (exist) {
+    res.status(422).json({ message: 'email already been used!' });
+    return;
   }
 
   const user = new User({ name, email, password });
@@ -33,6 +45,11 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
 
 export const login = asyncHandler(async (req: Request, res: Response) => {
   const { email, password } = req.body;
+
+  if (!email || !email.includes('@') || !password || password.trim() === '') {
+    res.status(422).json({ message: 'Invalid input.' });
+    return;
+  }
 
   const user = await User.findOne({ email });
 
