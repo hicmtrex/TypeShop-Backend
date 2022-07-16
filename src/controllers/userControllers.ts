@@ -11,6 +11,11 @@ import generateToken from '../utils/generateToken';
 export const register = asyncHandler(async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
 
+  if (email.trim() === '' || !email.trim().include('@')) {
+    res.status(500);
+    throw new Error('Please enter a valid email');
+  }
+
   const user = new User({ name, email, password });
 
   if (user) {

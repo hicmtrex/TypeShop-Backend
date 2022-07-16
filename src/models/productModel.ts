@@ -21,7 +21,7 @@ interface IProduct {
 
 const reviewSchema = new Schema<Review>(
   {
-    name: { type: String, required: true },
+    name: { type: String, required: true, unique: true },
     rating: { type: Number, required: true },
     comment: { type: String, required: true },
     user: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
