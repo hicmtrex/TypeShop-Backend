@@ -15,6 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createReview = exports.deleteProduct = exports.updateProduct = exports.createProduct = exports.getProductById = exports.getProductSearch = exports.getProductList = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const productModel_1 = __importDefault(require("../models/productModel"));
+// @desc    Fetch 12 products
+// @route   GET /api/products
+// @access  Public
 exports.getProductList = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const products = yield productModel_1.default.find({}).limit(12);
     if (products) {
@@ -25,6 +28,9 @@ exports.getProductList = (0, express_async_handler_1.default)((req, res) => __aw
         throw new Error('products not found!');
     }
 }));
+// @desc   Fetch all products with pages for pagination category brand for filter and searchQuery for search
+// @route   GET /api/products/search
+// @access  Public
 exports.getProductSearch = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const pageSize = req.query.pageSize || 9;
     const page = req.query.page || 1;
@@ -57,6 +63,9 @@ exports.getProductSearch = (0, express_async_handler_1.default)((req, res) => __
         pages: Math.ceil(countProducts / pageSize),
     });
 }));
+// @desc    Fetch single product
+// @route   GET /api/products/:id
+// @access  Public
 exports.getProductById = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const product = yield productModel_1.default.findById(req.params.id);
     if (product) {
@@ -67,6 +76,9 @@ exports.getProductById = (0, express_async_handler_1.default)((req, res) => __aw
         throw new Error('product not found!');
     }
 }));
+// @desc    Create a product
+// @route   POST /api/products
+// @access  Private/Admin
 exports.createProduct = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, image, description, brand, category, price, qty } = req.body;
     const product = new productModel_1.default({
@@ -87,6 +99,9 @@ exports.createProduct = (0, express_async_handler_1.default)((req, res) => __awa
         throw new Error('products not found!');
     }
 }));
+// @desc    Update a product
+// @route   PUT /api/products/:id
+// @access  Private/Admin
 exports.updateProduct = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const product = yield productModel_1.default.findByIdAndUpdate(req.params.id, req.body);
     if (product) {
@@ -97,6 +112,9 @@ exports.updateProduct = (0, express_async_handler_1.default)((req, res) => __awa
         throw new Error('products not found!');
     }
 }));
+// @desc    Delete a product
+// @route   DELETE /api/products/:id
+// @access  Private/Admin
 exports.deleteProduct = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const product = yield productModel_1.default.findById(req.params.id);
     if (product) {
@@ -108,6 +126,9 @@ exports.deleteProduct = (0, express_async_handler_1.default)((req, res) => __awa
         throw new Error('products not found!');
     }
 }));
+// @desc    Create review
+// @route   POST /api/products/:id/reviews
+// @access  Private
 exports.createReview = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { comment, rating } = req.body;
     const product = yield productModel_1.default.findById(req.params.id);

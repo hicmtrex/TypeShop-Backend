@@ -17,8 +17,15 @@ const express_async_handler_1 = __importDefault(require("express-async-handler")
 const userModel_1 = __importDefault(require("../models/userModel"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const generateToken_1 = __importDefault(require("../utils/generateToken"));
+// @desc    Register a new user
+// @route   POST /api/users/register
+// @access  Public
 exports.register = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, email, password } = req.body;
+    if (email.trim() === '' || !email.trim().include('@')) {
+        res.status(500);
+        throw new Error('Please enter a valid email');
+    }
     const user = new userModel_1.default({ name, email, password });
     if (user) {
         const newUser = yield user.save();
@@ -29,6 +36,9 @@ exports.register = (0, express_async_handler_1.default)((req, res) => __awaiter(
         throw new Error('user not found!');
     }
 }));
+// @desc    Auth user & get token
+// @route   POST /api/users/login
+// @access  Public
 exports.login = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     const user = yield userModel_1.default.findOne({ email });
@@ -51,6 +61,9 @@ exports.login = (0, express_async_handler_1.default)((req, res) => __awaiter(voi
         res.status(500).json({ message: 'email not exist' });
     }
 }));
+// @desc    Get all users
+// @route   Get /api/users
+// @access  Admin
 exports.getUsersList = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield userModel_1.default.find({});
     if (users) {
@@ -61,6 +74,9 @@ exports.getUsersList = (0, express_async_handler_1.default)((req, res) => __awai
         throw new Error('users not found!');
     }
 }));
+// @desc    Get single user
+// @route   Get /api/users/:id
+// @access  Private
 exports.getUserBydId = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield userModel_1.default.findById(req.params.id);
     if (user) {
@@ -71,6 +87,9 @@ exports.getUserBydId = (0, express_async_handler_1.default)((req, res) => __awai
         throw new Error('user not found!');
     }
 }));
+// @desc    update user profile
+// @route   Put /api/users/:id
+// @access  Private
 exports.updatrUserProfile = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, email, password } = req.body;
     const user = yield userModel_1.default.findById(req.params.id);
@@ -87,6 +106,9 @@ exports.updatrUserProfile = (0, express_async_handler_1.default)((req, res) => _
         throw new Error('user not found!');
     }
 }));
+// @desc    promote user to admin
+// @route   Post /api/users/promote/:id
+// @access  Admin
 exports.promoteAdmin = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield userModel_1.default.findById(req.params.id);
     if (user) {
@@ -99,6 +121,9 @@ exports.promoteAdmin = (0, express_async_handler_1.default)((req, res) => __awai
         throw new Error('user not found!');
     }
 }));
+// @desc    delete user
+// @route   Delete /api/users/:id
+// @access  Admin
 exports.deleteUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield userModel_1.default.findById(req.params.id);
     if (user) {

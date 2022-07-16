@@ -16,11 +16,15 @@ exports.stripePay = void 0;
 const stripe_1 = __importDefault(require("stripe"));
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const uid_generator_1 = __importDefault(require("uid-generator"));
-const key = process.env.STRIPE_SECRET_KEY || '';
+const config_1 = __importDefault(require("../config"));
+const key = config_1.default.STRIPE_SECRET_KEY || '';
 const stripe = new stripe_1.default(key, {
     apiVersion: '2020-08-27',
 });
 const uidgen = new uid_generator_1.default();
+// @desc    payment with stripe
+// @route   Post /api/orders/stripe
+// @access  Private
 exports.stripePay = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { token, amount } = req.body;
     const idempotencyKey = yield uidgen.generate();

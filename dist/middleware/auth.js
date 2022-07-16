@@ -16,13 +16,14 @@ exports.admin = exports.auth = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const userModel_1 = __importDefault(require("../models/userModel"));
+const config_1 = __importDefault(require("../config"));
 exports.auth = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { authorization } = req.headers;
     let token;
     if (authorization && authorization.startsWith('Bearer')) {
         try {
             token = authorization.split(' ')[1];
-            const decoded = jsonwebtoken_1.default.verify(token, '3033');
+            const decoded = jsonwebtoken_1.default.verify(token, config_1.default.JWT_SECRET);
             req.user = yield userModel_1.default.findById(decoded.id).select('-password');
             next();
         }

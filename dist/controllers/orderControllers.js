@@ -15,6 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createOrder = exports.deleteOrder = exports.getOrderById = exports.payOrder = exports.getUserOrder = exports.getOrderList = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const orderModel_1 = __importDefault(require("../models/orderModel"));
+// @desc    get all orders
+// @route   Get /api/orders
+// @access  Admin
 exports.getOrderList = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const orders = yield orderModel_1.default.find({});
     if (orders) {
@@ -25,6 +28,9 @@ exports.getOrderList = (0, express_async_handler_1.default)((req, res) => __awai
         throw new Error('orders not found!');
     }
 }));
+// @desc    get user orders
+// @route   Get /api/orders/orders-user
+// @access  Private
 exports.getUserOrder = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const orders = yield orderModel_1.default.find({ user: req.user._id });
     if (orders) {
@@ -35,6 +41,9 @@ exports.getUserOrder = (0, express_async_handler_1.default)((req, res) => __awai
         throw new Error('orders not found!');
     }
 }));
+// @desc    Pay order
+// @route   Put /api/orders/:id
+// @access  Private
 exports.payOrder = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const order = yield orderModel_1.default.findById(req.params.id);
     if (order) {
@@ -47,6 +56,9 @@ exports.payOrder = (0, express_async_handler_1.default)((req, res) => __awaiter(
         throw new Error('orders not found!');
     }
 }));
+// @desc    Get order by ID
+// @route   GET /api/orders/:id
+// @access  Private
 exports.getOrderById = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const order = yield orderModel_1.default.findById(req.params.id);
     if (order) {
@@ -57,6 +69,9 @@ exports.getOrderById = (0, express_async_handler_1.default)((req, res) => __awai
         throw new Error('order not found!');
     }
 }));
+// @desc    delete user order
+// @route   Delete /api/orders/:id
+// @access  Private
 exports.deleteOrder = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const order = yield orderModel_1.default.findById(req.params.id);
     if (order) {
@@ -68,6 +83,9 @@ exports.deleteOrder = (0, express_async_handler_1.default)((req, res) => __await
         throw new Error('orders not found!');
     }
 }));
+// @desc    Create new order
+// @route   POST /api/orders
+// @access  Private
 exports.createOrder = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { cartItems, shippingAddress, totalPrice } = req.body;
     const order = new orderModel_1.default({
