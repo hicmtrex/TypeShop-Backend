@@ -12,11 +12,7 @@ export interface IUser {
 const userSchema = new Schema<IUser>(
   {
     name: { type: String, required: true },
-<<<<<<< HEAD
     email: { type: String, required: true, unique: true },
-=======
-    email: { type: String, required: true ,unique:true },
->>>>>>> 2bdbec4e49638f0dcfa365d157909592e33f01f9
     password: { type: String, required: true },
     isAdmin: { type: Boolean, required: true, default: false },
   },
