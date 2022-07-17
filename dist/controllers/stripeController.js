@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.stripePay = void 0;
+exports.mobileStripePayment = exports.stripePay = void 0;
 const stripe_1 = __importDefault(require("stripe"));
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const uid_generator_1 = __importDefault(require("uid-generator"));
@@ -44,4 +44,21 @@ exports.stripePay = (0, express_async_handler_1.default)((req, res) => __awaiter
         .then((result) => {
         res.status(200).json(result);
     });
+}));
+exports.mobileStripePayment = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const paymentIntent = yield stripe.paymentIntents.create({
+            amount: Number(req.body.amount) * 100,
+            currency: 'usd',
+            payment_method_types: ['card'], //by default
+        });
+        const clientSecret = paymentIntent.client_secret;
+        res.json({
+            clientSecret: clientSecret,
+        });
+    }
+    catch (e) {
+        console.log(e.message);
+        res.json({ error: e.message });
+    }
 }));

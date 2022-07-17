@@ -10,6 +10,7 @@ const auth_1 = require("../middleware/auth");
 const router = express_1.default.Router();
 router.route('/').get(auth_1.auth, auth_1.admin, orderControllers_1.getOrderList).post(auth_1.auth, orderControllers_1.createOrder);
 router.route('/stripe').post(stripeController_1.stripePay);
+router.route('/stripe-mobile').post(stripeController_1.mobileStripePayment);
 router.route('/orders-user').get(auth_1.auth, orderControllers_1.getUserOrder);
 router
     .route('/:id')

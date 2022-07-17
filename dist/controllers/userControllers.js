@@ -22,9 +22,19 @@ const generateToken_1 = __importDefault(require("../utils/generateToken"));
 // @access  Public
 exports.register = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, email, password } = req.body;
-    if (email.trim() === '' || !email.trim().include('@')) {
-        res.status(500);
-        throw new Error('Please enter a valid email');
+    if (!email ||
+        !email.includes('@') ||
+        !name ||
+        name.trim() === '' ||
+        !password ||
+        password.trim() === '') {
+        res.status(422).json({ message: 'Invalid input.' });
+        return;
+    }
+    const exist = yield userModel_1.default.findOne({ email });
+    if (exist) {
+        res.status(422).json({ message: 'email already been used!' });
+        return;
     }
     const user = new userModel_1.default({ name, email, password });
     if (user) {
@@ -41,6 +51,10 @@ exports.register = (0, express_async_handler_1.default)((req, res) => __awaiter(
 // @access  Public
 exports.login = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
+    if (!email || !email.includes('@') || !password || password.trim() === '') {
+        res.status(422).json({ message: 'Invalid input.' });
+        return;
+    }
     const user = yield userModel_1.default.findOne({ email });
     if (user) {
         const match = yield bcryptjs_1.default.compare(password, user.password);
