@@ -17,9 +17,9 @@ const stripe_1 = __importDefault(require("stripe"));
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const uid_generator_1 = __importDefault(require("uid-generator"));
 const config_1 = __importDefault(require("../config"));
-const key = config_1.default.STRIPE_SECRET_KEY || '';
+const key = config_1.default.STRIPE_SECRET_KEY || "";
 const stripe = new stripe_1.default(key, {
-    apiVersion: '2020-08-27',
+    apiVersion: "2020-08-27",
 });
 const uidgen = new uid_generator_1.default();
 // @desc    payment with stripe
@@ -36,7 +36,7 @@ exports.stripePay = (0, express_async_handler_1.default)((req, res) => __awaiter
         .then((customer) => {
         stripe.charges.create({
             amount: amount * 100,
-            currency: 'usd',
+            currency: "usd",
             customer: customer.id,
             receipt_email: token === null || token === void 0 ? void 0 : token.email,
         }, { idempotencyKey });
@@ -49,8 +49,8 @@ exports.mobileStripePayment = (0, express_async_handler_1.default)((req, res) =>
     try {
         const paymentIntent = yield stripe.paymentIntents.create({
             amount: Number(req.body.amount) * 100,
-            currency: 'usd',
-            payment_method_types: ['card'], //by default
+            currency: "usd",
+            payment_method_types: ["card"], //by default
         });
         const clientSecret = paymentIntent.client_secret;
         res.json({

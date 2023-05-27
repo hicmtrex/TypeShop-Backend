@@ -4,7 +4,7 @@
   "description": "",
   "main": "index",
   "scripts": {
-    "dev": "nodemon src/server.ts",
+    "dev": "nodemon --watch \"src/**\" --ext \"ts,json\" --exec \"ts-node src/server.ts\"",
     "start": "node ./dist/server.js"
   },
   "author": "",

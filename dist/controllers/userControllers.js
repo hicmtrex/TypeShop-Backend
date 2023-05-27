@@ -23,17 +23,17 @@ const generateToken_1 = __importDefault(require("../utils/generateToken"));
 exports.register = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, email, password } = req.body;
     if (!email ||
-        !email.includes('@') ||
+        !email.includes("@") ||
         !name ||
-        name.trim() === '' ||
+        name.trim() === "" ||
         !password ||
-        password.trim() === '') {
-        res.status(422).json({ message: 'Invalid input.' });
+        password.trim() === "") {
+        res.status(422).json({ message: "Invalid input." });
         return;
     }
     const exist = yield userModel_1.default.findOne({ email });
     if (exist) {
-        res.status(422).json({ message: 'email already been used!' });
+        res.status(422).json({ message: "email already been used!" });
         return;
     }
     const user = new userModel_1.default({ name, email, password });
@@ -43,7 +43,7 @@ exports.register = (0, express_async_handler_1.default)((req, res) => __awaiter(
     }
     else {
         res.status(500);
-        throw new Error('user not found!');
+        throw new Error("user not found!");
     }
 }));
 // @desc    Auth user & get token
@@ -51,8 +51,8 @@ exports.register = (0, express_async_handler_1.default)((req, res) => __awaiter(
 // @access  Public
 exports.login = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
-    if (!email || !email.includes('@') || !password || password.trim() === '') {
-        res.status(422).json({ message: 'Invalid input.' });
+    if (!email || !email.includes("@") || !password || password.trim() === "") {
+        res.status(422).json({ message: "Invalid input." });
         return;
     }
     const user = yield userModel_1.default.findOne({ email });
@@ -68,24 +68,45 @@ exports.login = (0, express_async_handler_1.default)((req, res) => __awaiter(voi
             });
         }
         else {
-            res.status(500).json({ message: 'email or password wrong!' });
+            res.status(500).json({ message: "email or password wrong!" });
         }
     }
     else {
-        res.status(500).json({ message: 'email not exist' });
+        res.status(500).json({ message: "email not exist" });
     }
 }));
 // @desc    Get all users
 // @route   Get /api/users
 // @access  Admin
 exports.getUsersList = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const users = yield userModel_1.default.find({});
+    const pageSize = 10;
+    const page = req.query.page || 1;
+    const query = req.query.query || "";
+    const queryFilter = query && query !== "all"
+        ? {
+            username: {
+                $regex: query,
+                $options: "i",
+            },
+        }
+        : {};
+    const users = yield userModel_1.default.find(Object.assign({}, queryFilter))
+        .skip(pageSize * (page - 1))
+        .limit(pageSize)
+        .lean();
+    const countUsers = yield userModel_1.default.countDocuments(Object.assign({}, queryFilter));
+    const pages = Math.ceil(countUsers / pageSize);
     if (users) {
-        res.status(200).json(users);
+        res.status(200).json({
+            countUsers,
+            users,
+            page,
+            pages,
+        });
     }
     else {
         res.status(500);
-        throw new Error('users not found!');
+        throw new Error("users not found!");
     }
 }));
 // @desc    Get single user
@@ -98,7 +119,7 @@ exports.getUserBydId = (0, express_async_handler_1.default)((req, res) => __awai
     }
     else {
         res.status(400);
-        throw new Error('user not found!');
+        throw new Error("user not found!");
     }
 }));
 // @desc    update user profile
@@ -113,11 +134,11 @@ exports.updatrUserProfile = (0, express_async_handler_1.default)((req, res) => _
         if (password)
             user.password = password;
         yield user.save();
-        res.status(200).json('user has been updated!');
+        res.status(200).json("user has been updated!");
     }
     else {
         res.status(400);
-        throw new Error('user not found!');
+        throw new Error("user not found!");
     }
 }));
 // @desc    promote user to admin
@@ -128,11 +149,11 @@ exports.promoteAdmin = (0, express_async_handler_1.default)((req, res) => __awai
     if (user) {
         user.isAdmin = true;
         yield user.save();
-        res.status(200).json('user has been promoted to admin');
+        res.status(200).json("user has been promoted to admin");
     }
     else {
         res.status(400);
-        throw new Error('user not found!');
+        throw new Error("user not found!");
     }
 }));
 // @desc    delete user
@@ -142,10 +163,10 @@ exports.deleteUser = (0, express_async_handler_1.default)((req, res) => __awaite
     const user = yield userModel_1.default.findById(req.params.id);
     if (user) {
         yield user.remove();
-        res.status(200).json('user has been deleted');
+        res.status(200).json("user has been deleted");
     }
     else {
         res.status(400);
-        throw new Error('user not found!');
+        throw new Error("user not found!");
     }
 }));

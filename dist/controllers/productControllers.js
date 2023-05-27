@@ -25,7 +25,7 @@ exports.getProductList = (0, express_async_handler_1.default)((req, res) => __aw
     }
     else {
         res.status(500);
-        throw new Error('products not found!');
+        throw new Error("products not found!");
     }
 }));
 // @desc   Fetch all products with pages for pagination category brand for filter and searchQuery for search
@@ -34,21 +34,21 @@ exports.getProductList = (0, express_async_handler_1.default)((req, res) => __aw
 exports.getProductSearch = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const pageSize = req.query.pageSize || 9;
     const page = req.query.page || 1;
-    const category = req.query.category || '';
-    const brand = req.query.brand || '';
-    const searchQuery = req.query.query || '';
-    const queryFilter = searchQuery && searchQuery !== 'all'
+    const category = req.query.category || "";
+    const brand = req.query.brand || "";
+    const searchQuery = req.query.query || "";
+    const queryFilter = searchQuery && searchQuery !== "all"
         ? {
             name: {
                 $regex: searchQuery,
-                $options: 'i',
+                $options: "i",
             },
         }
         : {};
-    const categoryFilter = category && category !== 'all' ? { category } : {};
-    const brandFilter = brand && brand !== 'all' ? { brand } : {};
-    const categories = yield productModel_1.default.find({}).distinct('category');
-    const brands = yield productModel_1.default.find({}).distinct('brand');
+    const categoryFilter = category && category !== "all" ? { category } : {};
+    const brandFilter = brand && brand !== "all" ? { brand } : {};
+    const categories = yield productModel_1.default.find({}).distinct("category");
+    const brands = yield productModel_1.default.find({}).distinct("brand");
     const productDocs = yield productModel_1.default.find(Object.assign(Object.assign(Object.assign({}, queryFilter), categoryFilter), brandFilter))
         .skip(pageSize * (page - 1))
         .limit(pageSize)
@@ -73,7 +73,7 @@ exports.getProductById = (0, express_async_handler_1.default)((req, res) => __aw
     }
     else {
         res.status(400);
-        throw new Error('product not found!');
+        throw new Error("product not found!");
     }
 }));
 // @desc    Create a product
@@ -81,22 +81,27 @@ exports.getProductById = (0, express_async_handler_1.default)((req, res) => __aw
 // @access  Private/Admin
 exports.createProduct = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, image, description, brand, category, price, qty } = req.body;
-    const product = new productModel_1.default({
-        name,
-        image,
-        description,
-        brand,
-        category,
-        price,
-        qty,
-    });
-    if (product) {
+    try {
+        const product = new productModel_1.default({
+            name,
+            image,
+            description,
+            brand,
+            category,
+            price,
+            qty,
+        });
         const newProduct = yield product.save();
         res.status(201).json(newProduct);
     }
-    else {
-        res.status(400);
-        throw new Error('products not found!');
+    catch (error) {
+        if (error.code === 11000) {
+            // Handle duplicate key error
+            res.status(400).json({ message: "Duplicate key error." });
+        }
+        else {
+            res.status(500).json({ message: "Internal server error." });
+        }
     }
 }));
 // @desc    Update a product
@@ -105,11 +110,11 @@ exports.createProduct = (0, express_async_handler_1.default)((req, res) => __awa
 exports.updateProduct = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const product = yield productModel_1.default.findByIdAndUpdate(req.params.id, req.body);
     if (product) {
-        res.status(200).json('Product has been updated');
+        res.status(200).json("Product has been updated");
     }
     else {
         res.status(400);
-        throw new Error('products not found!');
+        throw new Error("products not found!");
     }
 }));
 // @desc    Delete a product
@@ -119,11 +124,11 @@ exports.deleteProduct = (0, express_async_handler_1.default)((req, res) => __awa
     const product = yield productModel_1.default.findById(req.params.id);
     if (product) {
         yield product.remove();
-        res.status(200).json('Product has been deleted');
+        res.status(200).json("Product has been deleted");
     }
     else {
         res.status(400);
-        throw new Error('products not found!');
+        throw new Error("products not found!");
     }
 }));
 // @desc    Create review
@@ -135,7 +140,7 @@ exports.createReview = (0, express_async_handler_1.default)((req, res) => __awai
     if (product) {
         const exist = product.reviews.find((r) => r.user.toString() === req.user._id.toString());
         if (exist) {
-            res.status(400).json({ message: 'You already reviewed on this product' });
+            res.status(400).json({ message: "You already reviewed on this product" });
         }
         else {
             const review = {
@@ -151,6 +156,6 @@ exports.createReview = (0, express_async_handler_1.default)((req, res) => __awai
     }
     else {
         res.status(404);
-        throw new Error('Product not found');
+        throw new Error("Product not found");
     }
 }));
