@@ -1,4 +1,4 @@
-import { Schema, model, Types } from 'mongoose';
+import { Schema, model, Types } from "mongoose";
 
 type Review = {
   name: string;
@@ -19,12 +19,13 @@ interface IProduct {
   // _id: string;
 }
 
+
 const reviewSchema = new Schema<Review>(
   {
-    name: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
     rating: { type: Number, required: true },
     comment: { type: String, required: true },
-    user: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
+    user: { type: Schema.Types.ObjectId, required: true, ref: "User" },
   },
   {
     timestamps: true,
@@ -47,6 +48,6 @@ const productSchema = new Schema<IProduct>(
   }
 );
 
-const Product = model<IProduct>('Product', productSchema);
+const Product = model<IProduct>("Product", productSchema);
 
 export default Product;

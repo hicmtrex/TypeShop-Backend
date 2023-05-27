@@ -1,13 +1,13 @@
-import Stripe from 'stripe';
-import asyncHandler from 'express-async-handler';
-import UIDGenerator from 'uid-generator';
-import sanitizedConfig from '../config';
-import { Request, Response } from 'express';
+import Stripe from "stripe";
+import asyncHandler from "express-async-handler";
+import UIDGenerator from "uid-generator";
+import sanitizedConfig from "../config";
+import { Request, Response } from "express";
 
-const key: string | undefined = sanitizedConfig.STRIPE_SECRET_KEY || '';
+const key: string | undefined = sanitizedConfig.STRIPE_SECRET_KEY || "";
 
 const stripe = new Stripe(key, {
-  apiVersion: '2020-08-27',
+  apiVersion: "2020-08-27",
 });
 
 const uidgen = new UIDGenerator();
@@ -28,7 +28,7 @@ export const stripePay = asyncHandler(async (req: Request, res: Response) => {
       stripe.charges.create(
         {
           amount: amount * 100,
-          currency: 'usd',
+          currency: "usd",
           customer: customer.id,
           receipt_email: token?.email,
         },
@@ -45,8 +45,8 @@ export const mobileStripePayment = asyncHandler(
     try {
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Number(req.body.amount) * 100, //lowest denomination of particular currency
-        currency: 'usd',
-        payment_method_types: ['card'], //by default
+        currency: "usd",
+        payment_method_types: ["card"], //by default
       });
 
       const clientSecret = paymentIntent.client_secret;

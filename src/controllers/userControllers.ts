@@ -1,8 +1,8 @@
-import { Request, Response } from 'express';
-import asyncHandler from 'express-async-handler';
-import User from '../models/userModel';
-import bcrypt from 'bcryptjs';
-import generateToken from '../utils/generateToken';
+import { Request, Response } from "express";
+import asyncHandler from "express-async-handler";
+import User from "../models/userModel";
+import bcrypt from "bcryptjs";
+import generateToken from "../utils/generateToken";
 
 // @desc    Register a new user
 // @route   POST /api/users/register
@@ -12,19 +12,19 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
   if (
     !email ||
-    !email.includes('@') ||
+    !email.includes("@") ||
     !name ||
-    name.trim() === '' ||
+    name.trim() === "" ||
     !password ||
-    password.trim() === ''
+    password.trim() === ""
   ) {
-    res.status(422).json({ message: 'Invalid input.' });
+    res.status(422).json({ message: "Invalid input." });
     return;
   }
   const exist = await User.findOne({ email });
 
   if (exist) {
-    res.status(422).json({ message: 'email already been used!' });
+    res.status(422).json({ message: "email already been used!" });
     return;
   }
 
@@ -35,7 +35,7 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
     res.status(201).json(newUser);
   } else {
     res.status(500);
-    throw new Error('user not found!');
+    throw new Error("user not found!");
   }
 });
 
@@ -46,8 +46,8 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
 export const login = asyncHandler(async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
-  if (!email || !email.includes('@') || !password || password.trim() === '') {
-    res.status(422).json({ message: 'Invalid input.' });
+  if (!email || !email.includes("@") || !password || password.trim() === "") {
+    res.status(422).json({ message: "Invalid input." });
     return;
   }
 
@@ -64,10 +64,10 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
         token: generateToken(user?._id),
       });
     } else {
-      res.status(500).json({ message: 'email or password wrong!' });
+      res.status(500).json({ message: "email or password wrong!" });
     }
   } else {
-    res.status(500).json({ message: 'email not exist' });
+    res.status(500).json({ message: "email not exist" });
   }
 });
 
@@ -77,13 +77,43 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 
 export const getUsersList = asyncHandler(
   async (req: Request, res: Response) => {
-    const users = await User.find({});
+    const pageSize = 10;
+    const page: any = req.query.page || 1;
+    const query: any = req.query.query || "";
+
+    const queryFilter =
+      query && query !== "all"
+        ? {
+            username: {
+              $regex: query,
+              $options: "i",
+            },
+          }
+        : {};
+
+    const users = await User.find({
+      ...queryFilter,
+    })
+      .skip(pageSize * (page - 1))
+      .limit(pageSize)
+      .lean();
+
+    const countUsers = await User.countDocuments({
+      ...queryFilter,
+    });
+
+    const pages = Math.ceil(countUsers / pageSize);
 
     if (users) {
-      res.status(200).json(users);
+      res.status(200).json({
+        countUsers,
+        users,
+        page,
+        pages,
+      });
     } else {
       res.status(500);
-      throw new Error('users not found!');
+      throw new Error("users not found!");
     }
   }
 );
@@ -100,7 +130,7 @@ export const getUserBydId = asyncHandler(
       res.status(200).json(user);
     } else {
       res.status(400);
-      throw new Error('user not found!');
+      throw new Error("user not found!");
     }
   }
 );
@@ -119,10 +149,10 @@ export const updatrUserProfile = asyncHandler(
       user.email = email || user.email;
       if (password) user.password = password;
       await user.save();
-      res.status(200).json('user has been updated!');
+      res.status(200).json("user has been updated!");
     } else {
       res.status(400);
-      throw new Error('user not found!');
+      throw new Error("user not found!");
     }
   }
 );
@@ -138,10 +168,10 @@ export const promoteAdmin = asyncHandler(
     if (user) {
       user.isAdmin = true;
       await user.save();
-      res.status(200).json('user has been promoted to admin');
+      res.status(200).json("user has been promoted to admin");
     } else {
       res.status(400);
-      throw new Error('user not found!');
+      throw new Error("user not found!");
     }
   }
 );
@@ -155,9 +185,9 @@ export const deleteUser = asyncHandler(async (req: Request, res: Response) => {
 
   if (user) {
     await user.remove();
-    res.status(200).json('user has been deleted');
+    res.status(200).json("user has been deleted");
   } else {
     res.status(400);
-    throw new Error('user not found!');
+    throw new Error("user not found!");
   }
 });

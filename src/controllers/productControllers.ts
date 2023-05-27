@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
-import asyncHandler from 'express-async-handler';
-import Product from '../models/productModel';
+import { Request, Response } from "express";
+import asyncHandler from "express-async-handler";
+import Product from "../models/productModel";
 
 // @desc    Fetch 12 products
 // @route   GET /api/products
@@ -13,7 +13,7 @@ export const getProductList = asyncHandler(
       res.status(200).json(products);
     } else {
       res.status(500);
-      throw new Error('products not found!');
+      throw new Error("products not found!");
     }
   }
 );
@@ -27,24 +27,24 @@ export const getProductSearch = asyncHandler(
     const pageSize: any = req.query.pageSize || 9;
     const page: any = req.query.page || 1;
 
-    const category = req.query.category || '';
-    const brand = req.query.brand || '';
-    const searchQuery = req.query.query || '';
+    const category = req.query.category || "";
+    const brand = req.query.brand || "";
+    const searchQuery = req.query.query || "";
 
     const queryFilter =
-      searchQuery && searchQuery !== 'all'
+      searchQuery && searchQuery !== "all"
         ? {
             name: {
               $regex: searchQuery,
-              $options: 'i',
+              $options: "i",
             },
           }
         : {};
-    const categoryFilter = category && category !== 'all' ? { category } : {};
-    const brandFilter = brand && brand !== 'all' ? { brand } : {};
+    const categoryFilter = category && category !== "all" ? { category } : {};
+    const brandFilter = brand && brand !== "all" ? { brand } : {};
 
-    const categories = await Product.find({}).distinct('category');
-    const brands = await Product.find({}).distinct('brand');
+    const categories = await Product.find({}).distinct("category");
+    const brands = await Product.find({}).distinct("brand");
     const productDocs = await Product.find({
       ...queryFilter,
       ...categoryFilter,
@@ -83,7 +83,7 @@ export const getProductById = asyncHandler(
       res.status(200).json(product);
     } else {
       res.status(400);
-      throw new Error('product not found!');
+      throw new Error("product not found!");
     }
   }
 );
@@ -95,22 +95,27 @@ export const getProductById = asyncHandler(
 export const createProduct = asyncHandler(
   async (req: Request, res: Response) => {
     const { name, image, description, brand, category, price, qty } = req.body;
-    const product = new Product({
-      name,
-      image,
-      description,
-      brand,
-      category,
-      price,
-      qty,
-    });
 
-    if (product) {
+    try {
+      const product = new Product({
+        name,
+        image,
+        description,
+        brand,
+        category,
+        price,
+        qty,
+      });
+
       const newProduct = await product.save();
       res.status(201).json(newProduct);
-    } else {
-      res.status(400);
-      throw new Error('products not found!');
+    } catch (error: any) {
+      if (error.code === 11000) {
+        // Handle duplicate key error
+        res.status(400).json({ message: "Duplicate key error." });
+      } else {
+        res.status(500).json({ message: "Internal server error." });
+      }
     }
   }
 );
@@ -124,10 +129,10 @@ export const updateProduct = asyncHandler(
     const product = await Product.findByIdAndUpdate(req.params.id, req.body);
 
     if (product) {
-      res.status(200).json('Product has been updated');
+      res.status(200).json("Product has been updated");
     } else {
       res.status(400);
-      throw new Error('products not found!');
+      throw new Error("products not found!");
     }
   }
 );
@@ -142,10 +147,10 @@ export const deleteProduct = asyncHandler(
 
     if (product) {
       await product.remove();
-      res.status(200).json('Product has been deleted');
+      res.status(200).json("Product has been deleted");
     } else {
       res.status(400);
-      throw new Error('products not found!');
+      throw new Error("products not found!");
     }
   }
 );
@@ -163,7 +168,7 @@ export const createReview = asyncHandler(async (req: any, res: Response) => {
       (r) => r.user.toString() === req.user._id.toString()
     );
     if (exist) {
-      res.status(400).json({ message: 'You already reviewed on this product' });
+      res.status(400).json({ message: "You already reviewed on this product" });
     } else {
       const review = {
         name: req.user.name as string,
@@ -180,6 +185,6 @@ export const createReview = asyncHandler(async (req: any, res: Response) => {
     }
   } else {
     res.status(404);
-    throw new Error('Product not found');
+    throw new Error("Product not found");
   }
 });
