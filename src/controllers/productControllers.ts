@@ -7,7 +7,7 @@ import Product from "../models/productModel";
 // @access  Public
 export const getProductList = asyncHandler(
   async (req: Request, res: Response) => {
-    const products = await Product.find({}).limit(12);
+    const products = await Product.find({}).sort("-createdAt").limit(12);
 
     if (products) {
       res.status(200).json(products);

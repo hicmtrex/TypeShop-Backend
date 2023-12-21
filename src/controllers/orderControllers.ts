@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
-import asyncHandler from 'express-async-handler';
-import Order from '../models/orderModel';
+import { Request, Response } from "express";
+import asyncHandler from "express-async-handler";
+import Order from "../models/orderModel";
 
 // @desc    get all orders
 // @route   Get /api/orders
@@ -8,13 +8,13 @@ import Order from '../models/orderModel';
 
 export const getOrderList = asyncHandler(
   async (req: Request, res: Response) => {
-    const orders = await Order.find({});
+    const orders = await Order.find({}).sort("-createdAt");
 
     if (orders) {
       res.status(200).json(orders);
     } else {
       res.status(400);
-      throw new Error('orders not found!');
+      throw new Error("orders not found!");
     }
   }
 );
@@ -30,7 +30,7 @@ export const getUserOrder = asyncHandler(async (req: any, res: Response) => {
     res.status(200).json(orders);
   } else {
     res.status(400);
-    throw new Error('orders not found!');
+    throw new Error("orders not found!");
   }
 });
 
@@ -47,7 +47,7 @@ export const payOrder = asyncHandler(async (req: Request, res: Response) => {
     res.status(200).json(updatedOrder);
   } else {
     res.status(400);
-    throw new Error('orders not found!');
+    throw new Error("orders not found!");
   }
 });
 
@@ -63,7 +63,7 @@ export const getOrderById = asyncHandler(
       res.status(200).json(order);
     } else {
       res.status(400);
-      throw new Error('order not found!');
+      throw new Error("order not found!");
     }
   }
 );
@@ -77,10 +77,10 @@ export const deleteOrder = asyncHandler(async (req: Request, res: Response) => {
 
   if (order) {
     await order.remove();
-    res.status(200).json('order has been deleted');
+    res.status(200).json("order has been deleted");
   } else {
     res.status(400);
-    throw new Error('orders not found!');
+    throw new Error("orders not found!");
   }
 });
 
@@ -100,7 +100,7 @@ export const createOrder = asyncHandler(async (req: any, res: Response) => {
 
   if (cartItems.length === 0) {
     res.status(400);
-    throw new Error('No order items');
+    throw new Error("No order items");
   }
 
   if (order) {
@@ -108,6 +108,6 @@ export const createOrder = asyncHandler(async (req: any, res: Response) => {
     res.status(201).json(newOrder);
   } else {
     res.status(400);
-    throw new Error('order not found!');
+    throw new Error("order not found!");
   }
 });

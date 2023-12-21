@@ -95,6 +95,7 @@ export const getUsersList = asyncHandler(
       ...queryFilter,
     })
       .skip(pageSize * (page - 1))
+      .sort("-createdAt")
       .limit(pageSize)
       .lean();
 
