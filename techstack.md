@@ -34,7 +34,7 @@ Full tech stack [here](/techstack.md)
 # Tech Stack File
 ![](https://img.stackshare.io/repo.svg "repo") [hicmtrex/TypeShop-Backend](https://github.com/hicmtrex/TypeShop-Backend)![](https://img.stackshare.io/public_badge.svg "public")
 <br/><br/>
-|22<br/>Tools used|12/21/23 <br/>Report generated|
+|23<br/>Tools used|01/05/24 <br/>Report generated|
 |------|------|
 </div>
 
@@ -149,9 +149,9 @@ Full tech stack [here](/techstack.md)
 </table>
 
 
-## <img src='https://img.stackshare.io/group.svg' /> Open source packages (12)</h2>
+## <img src='https://img.stackshare.io/group.svg' /> Open source packages (13)</h2>
 
-## <img width='24' height='24' src='https://img.stackshare.io/service/1120/lejvzrnlpb308aftn31u.png'/> npm (12)
+## <img width='24' height='24' src='https://img.stackshare.io/service/1120/lejvzrnlpb308aftn31u.png'/> npm (13)
 
 |NAME|VERSION|LAST UPDATED|LAST UPDATED BY|LICENSE|VULNERABILITIES|
 |:------|:------|:------|:------|:------|:------|
@@ -160,6 +160,7 @@ Full tech stack [here](/techstack.md)
 |[@types/jsonwebtoken](https://www.npmjs.com/@types/jsonwebtoken)|v8.5.8|05/27/23|hicmtrex |MIT|N/A|
 |[@types/morgan](https://www.npmjs.com/@types/morgan)|v1.9.3|06/29/22|Firstname Lastname |MIT|N/A|
 |[bcryptjs](https://www.npmjs.com/bcryptjs)|v2.4.3|06/29/22|Firstname Lastname |MIT|N/A|
+|[chalk](https://www.npmjs.com/chalk)|v5.0.1|06/29/22|Firstname Lastname |MIT|N/A|
 |[colors](https://www.npmjs.com/colors)|v1.4.0|06/29/22|Firstname Lastname |MIT|N/A|
 |[cors](https://www.npmjs.com/cors)|v2.8.5|06/29/22|Firstname Lastname |MIT|N/A|
 |[express](https://www.npmjs.com/express)|v4.18.1|06/29/22|Firstname Lastname |MIT|N/A|
